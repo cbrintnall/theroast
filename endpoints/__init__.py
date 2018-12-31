@@ -1,4 +1,10 @@
-import sys
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
 
-def get_endpoints():
-    print(dir(sys.modules[__name__]))
+ENGINE = create_engine("sqlite:///tmp/test.db", echo=True)
+Base = declarative_base()
+
+# Sessionmaker returns a class, not object.
+Session = sessionmaker(bind=ENGINE)
+SESSION = Session()

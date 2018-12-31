@@ -2,7 +2,8 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 
-from endpoints.beans import Beans
+from endpoints.beans import Beans, BeanModel
+from endpoints import ENGINE
 from settings import get_settings
 
 class RoasteryApp:
@@ -11,16 +12,19 @@ class RoasteryApp:
 
         settings = get_settings()
         self.app.config.from_object(settings)
-        self.app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:////C:\\tmp\\test.db'
-
         self.api = Api(self.app)
-        self.db = SQLAlchemy(self.app)
-        self.connection = self.db.make_connector()
-        
+
+    def init_resources(self):
         self.api.add_resource(Beans, "/beans/<string:id>")
+        
+    def init_tables(self):
+        if not ENGINE.dialect.has_table(ENGINE, "beans"):
+            BeanModel.__table__.create(ENGINE)
 
     def run(self, *args, **kwargs):
-        self.db.create_all()
+        self.init_resources()
+        self.init_tables()
+
         self.app.run(*args, **kwargs)
 
 def get_app(*args, **kwargs):
