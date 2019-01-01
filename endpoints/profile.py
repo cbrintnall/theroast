@@ -6,53 +6,45 @@ from endpoints import Base, SESSION, ENGINE
 from helpers import response
 
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-class BeanModel(Base):
-    __tablename__ = "beans"
+class Profile(Base):
+    __tablename__ = "profiles"
     id = Column(Integer, primary_key=True)
     name = Column(String(120), unique=True, nullable=False)
-    color = Column(String(80), nullable=False)
 
     def repr(self):
-        return "<{} | {}>".format(self.name, self.color)
+        return "{}".format(self.name)
 
-class BeanSchema(Schema):
-    id = fields.Int()
-    name = fields.Str(required=True,
-                      error_messages={'required': 'Please provide a name.'})
-
-    color = fields.Str(required=True,
-                       error_messages={'required': 'Please provide a roast color.'})
+class ProfileSchema(Schema):
+    name = fields.Str(required=True)
 
     @validates('name')
     def validate_name(self, value):
-        item = SESSION.query(exists().where(BeanModel.name==value)).scalar()
+        item = SESSION.query(exists().where(Profile.name==value)).scalar()
         if item:
             raise ValidationError("{} already exists, please use another name"
                                   .format(value))
 
+        if not re.match("[^\d]+", value):
+            raise ValidationError("Please enter only charaters.")
+
     @post_load
-    def make_bean(self, data):
-        return BeanModel(**data)
+    def load_object(self, data):
+        return Profile(**data)
 
-class Beans(Resource):
-    def get(self, id=None):
-        if id is None:
-            return response(errors="Please provide an ID.")
-
-        schema = BeanSchema()
-        bean = SESSION.query(BeanModel).get(id)
+class ProfileEndpoint(Resource):
+    def get(self, id):
+        schema = ProfileSchema()
+        bean = SESSION.query(Profile).get(id)
         return schema.dump(bean)
 
-    def put(self, id=None):
-        if id is None:
-            return response(errors="Please provide an ID.")
-
-        schema = BeanSchema()
-        obj = SESSION.query(BeanModel).filter(BeanModel.id == id)
+    def put(self, id):
+        schema = ProfileSchema()
+        obj = SESSION.query(Profile).filter(Profile.id == id)
 
         if obj is None:
             return response(errors=["Object with id {} does not exist.".format(id)])
@@ -62,11 +54,8 @@ class Beans(Resource):
         return response(messages={})
 
     def delete(self, id):
-        if id is None:
-            return response(errors="Please provide an ID.")
-
-        schema = BeanSchema()
-        obj = SESSION.query(BeanModel).get(id)
+        schema = ProfileSchema()
+        obj = SESSION.query(Profile).get(id)
 
         if obj is None:
             return response(errors=["Object with id {} does not exist.".format(id)])
@@ -77,7 +66,7 @@ class Beans(Resource):
         return response(messages=loaded_model)
 
     def post(self):
-        schema = BeanSchema(dump_only=["id"])
+        schema = ProfileSchema(dump_only=["id"])
         data = request.form
         loaded_model = schema.load(data)
         
