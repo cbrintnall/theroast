@@ -46,14 +46,14 @@ class Beans(Resource):
 
     def put(self, id):
         schema = BeanSchema()
-        obj = SESSION.query(BeanModel).get(id)
+        obj = SESSION.query(BeanModel).filter(BeanModel.id == id)
 
         if obj is None:
             return response(errors=["Object with id {} does not exist.".format(id)])
 
-        obj.update(**request.values)
+        obj.update(request.values)
         SESSION.commit()
-        return response(messages=schema.dump(obj))
+        return response(messages={})
 
     def delete(self, id):
         schema = BeanSchema()
