@@ -1,0 +1,21 @@
+# This file is strictly for development - Not to be used in production.
+
+version: '3'
+services:
+  backend:
+    build: backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_HOST=database
+      - POSTGRES_DATABASE=postgres
+  database:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=docker
