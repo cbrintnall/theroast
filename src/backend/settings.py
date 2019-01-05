@@ -8,7 +8,7 @@ class Settings:
     POSTGRES_PASSWORD   = os.environ.get("POSTGRES_PASSWORD")
     POSTGRES_DATABASE   = os.environ.get("POSTGRES_DATABASE")
     POSTGRES_HOST       = os.environ.get("POSTGRES_HOST")
-    POSTGRES_PORT = 5432
+    POSTGRES_PORT       = 5432
 
 class NonprodSettings(Settings):
     pass
