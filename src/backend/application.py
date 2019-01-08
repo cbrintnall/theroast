@@ -1,12 +1,13 @@
 from roastery import RoasteryApp
-from mongo_thingy import connect
 
 from utils.application import register_methodview
 from endpoints.beans import Beans
 
+from mongo_thingy import connect
+
 def get_application():
     app = RoasteryApp(__name__)
-    connect("mongodb://localhost/test")
+    connect("mongodb://mongo:27017", username="root", password="example")
 
     @app.errorhandler(Exception)
     def handle_error(e):
