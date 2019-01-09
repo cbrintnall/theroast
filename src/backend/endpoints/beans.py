@@ -1,24 +1,44 @@
 from flask import request
 from flask.views import MethodView
-
+from schema.beans import BeanSchema
 from models.beans import BeansModel
-from random import randint
+from uuid import uuid4
+from base64 import b64encode
 
-from models.beans import BeansModel
+import logging
 
-class Beans(MethodView):    
+logging.basicConfig()
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
+
+class Beans(MethodView):
+    def generate_id(self):
+        return u"{}".format(str(uuid4()))
+
     def get(self, bean_id=None):
-        beans = BeansModel.find_one()
-        return {"HEY":"HEY"}
+        bean = BeansModel.find_one({"bean_id": b64encode(bean_id)})
+        print(bean)
+        return {}
 
     def post(self, bean_id=None):
-        name = str(randint(0, 500))
-        b = BeansModel({"name": name})
-        b.save()
-        return {
-            "status": "created",
-            "model": "a"
-        }
+        schema = BeanSchema()
+        args = dict(request.values)
+        bid = self.generate_id()
+        args["bean_id"] = bid
+
+        model = schema.load(args)
+
+        payload = None
+        code = 201
+        if not model.errors:
+            model.data.save()
+            payload = {"status":"created"}
+            payload["bean_id"] = bid
+        else:
+            payload = model.errors
+            code = 400
+
+        return payload, code
 
     def put(self, bean_id=None):
         return {"HOWEDY":"DOO"}
