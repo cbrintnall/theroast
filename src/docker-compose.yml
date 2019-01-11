@@ -15,6 +15,16 @@ services:
       - DATABASE_PASSWORD=example
       - DATABASE_HOST=database
       - FLASK_HOST=0.0.0.0
+  frontend:
+    build: frontend
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app
+    environment:
+      - ENV=nonprod
   mongo:
     image: mongo
     restart: always
