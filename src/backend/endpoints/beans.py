@@ -2,9 +2,7 @@ from flask import request
 from flask.views import MethodView
 from schema.beans import BeanSchema
 from models.beans import BeansModel
-from uuid import uuid4
-from base64 import b64encode
-
+from uuid import uuid4, UUID
 import logging
 
 logging.basicConfig()
@@ -16,9 +14,10 @@ class Beans(MethodView):
         return u"{}".format(str(uuid4()))
 
     def get(self, bean_id=None):
-        bean = BeansModel.find_one({"bean_id": b64encode(bean_id)})
-        print(bean)
-        return {}
+        bean = BeansModel.find_one({"bean_id": UUID(bean_id)})
+        schema = BeanSchema()
+        response = schema.dumps(bean)
+        return response
 
     def post(self, bean_id=None):
         schema = BeanSchema()
@@ -41,7 +40,11 @@ class Beans(MethodView):
         return payload, code
 
     def put(self, bean_id=None):
+        bean = BeansModel.find_one({"bean_id": UUID(bean_id)})
+        schema = BeanSchema()
+
         return {"HOWEDY":"DOO"}
 
     def delete(self, bean_id=None):
-        return {"HOWEDY":"DOO"}
+        BeansModel.collection.delete_one({"bean_id": UUID(bean_id)})
+        return {"status":"deleted"}

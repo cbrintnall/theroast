@@ -1,9 +1,10 @@
 from marshmallow import Schema, fields, post_load, validates
 from marshmallow.exceptions import ValidationError
 from models.beans import BeansModel
+from uuid import UUID
 
 class BeanSchema(Schema):
-    bean_id = fields.UUID()
+    bean_id = fields.UUID(required=True)
     name = fields.Str(required=True,
                       error_messages={'required': 'Please provide a name.'})
 
