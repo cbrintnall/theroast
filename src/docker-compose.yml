@@ -25,6 +25,7 @@ services:
       - ./frontend:/app
     environment:
       - ENV=nonprod
+      - CHOKIDAR_USEPOLLING=true
   mongo:
     image: mongo
     restart: always
