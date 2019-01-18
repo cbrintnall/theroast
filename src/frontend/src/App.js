@@ -1,17 +1,19 @@
+import GetUrl from './settings';
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import Index from './pages/index';
+import Bean from './pages/beans';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p> Hello. </p>
-          <p> This is a test. </p>
-        </header>
-      </div>
+      <Router>
+        <div>
+          <Route path={GetUrl("index")} exact component={Index}></Route>
+          <Route path={GetUrl("beans")} exact component={Bean}></Route>
+        </div>
+      </Router>
     );
   }
 }
