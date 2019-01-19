@@ -1,21 +1,21 @@
 from roastery import RoasteryApp
-
-from utils.application import register_methodview
 from endpoints.beans import Beans
-from models.beans import BeansModel
 
-from mongo_thingy import connect
+import os
+import logging
+
+logging.basicConfig()
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
 
 def get_application():
     app = RoasteryApp(__name__)
-    connect("mongodb://mongo:27017", username="root", password="example")
-    BeansModel.create_index("bean_id", unique=True)
 
     @app.errorhandler(Exception)
     def handle_error(e):
-        return {"Error": str(e)}
+        return str(e), 500
 
-    register_methodview(app, Beans)
+    app.add_endpoint(Beans)
 
     return app
 

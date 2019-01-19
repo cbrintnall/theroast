@@ -1,9 +1,13 @@
 from flask import Blueprint
 
-def register_methodview(app, endpoint):
+def generate_blueprint(endpoint_cls):
     # Take classname and lowercase it
-    url = "{}".format(endpoint.__name__.lower())
+    url = endpoint_cls.__name__.lower()
     view_blueprint = Blueprint(url, __name__)
-    view_blueprint.add_url_rule("/", url, endpoint.as_view(url))
-    view_blueprint.add_url_rule("/<string:bean_id>", "{}_id".format(url), endpoint.as_view(url))
-    app.register_blueprint(view_blueprint, url_prefix="/{}".format(url))
+    view_blueprint.add_url_rule("/", 
+                                url, 
+                                endpoint_cls.as_view(url))
+    view_blueprint.add_url_rule("/<string:uid>", 
+                                "{}_id".format(url), 
+                                endpoint_cls.as_view(url))
+    return view_blueprint

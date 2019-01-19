@@ -3,6 +3,7 @@
 version: '3'
 services:
   backend:
+    restart: always
     build: backend
     depends_on: 
       - mongo

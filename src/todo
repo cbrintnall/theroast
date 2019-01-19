@@ -1,0 +1,16 @@
+Frontend:
+    New:
+    Blocked:
+        ☐ Implement login (blocked by user backend)
+    Done:
+
+Backend:
+    New:
+        ☐ Implement user model @started(19-01-19 00:05)
+        ☐ Implement user endpoint @started(19-01-19 00:06)
+        ☐ Write user data schema @started(19-01-19 00:06)
+        ☐ Work on Endpoint View @started(19-01-19 00:15)
+    Blocked:
+    Done:
+    
+    
