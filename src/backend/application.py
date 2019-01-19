@@ -10,11 +10,6 @@ LOGGER.setLevel(logging.INFO)
 
 def get_application():
     app = RoasteryApp(__name__)
-
-    @app.errorhandler(Exception)
-    def handle_error(e):
-        return str(e), 500
-
     app.add_endpoint(Beans)
 
     return app

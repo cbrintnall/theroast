@@ -1,6 +1,7 @@
 from flask import request
 from flask.views import MethodView
 from uuid import uuid4, UUID
+from utils.exceptions import RoastError
 
 class EndpointView(MethodView):
     def __init__(self, *args, **kwargs):
@@ -13,7 +14,14 @@ class EndpointView(MethodView):
         return u"{}".format(str(uuid4()))
 
     def get(self, uid=None):
+        if uid is None:
+            raise RoastError("Please provide a valid UID", status_code=404)
+
         item = self.model.find_one({"_id": UUID(uid)})
+        if item is None:
+            raise RoastError("Couldn't locate user with UID = {}".format(uid), 
+                             status_code=404)
+
         schema = self.schema()
         response = schema.dumps(item)
         return response
@@ -45,5 +53,8 @@ class EndpointView(MethodView):
         return {"test":"test"}
 
     def delete(self, uid=None):
+        if uid is None:
+            raise RoastError("Please provide a valid UID", status_code=404)
+
         self.model.collection.delete_one({"_id": UUID(uid)})
         return {"status":"deleted"}
