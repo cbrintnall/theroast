@@ -4,6 +4,7 @@ from mongo_thingy import connect
 from utils.application import generate_blueprint
 from utils.exceptions import RoastError
 from flask import jsonify
+from traceback import print_last
 
 import os
 import logging
@@ -21,9 +22,13 @@ def handle_error(error):
     mutual_fields = set(dir(error)).intersection(CODE_FIELDS)
     if len(mutual_fields) > 0:
         code = getattr(error, list(mutual_fields)[0])
-        print(code)
         if type(code) is int:
             status_code = code
+
+    try:
+        print_last()
+    except ValueError as e:
+        print("No exception to print")
 
     return jsonify(response), status_code
 

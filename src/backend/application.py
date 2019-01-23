@@ -1,5 +1,6 @@
 from roastery import RoasteryApp
 from endpoints.beans import Beans
+from endpoints.users import Users
 
 import os
 import logging
@@ -10,7 +11,9 @@ LOGGER.setLevel(logging.INFO)
 
 def get_application():
     app = RoasteryApp(__name__)
+    
     app.add_endpoint(Beans)
+    app.add_endpoint(Users)
 
     return app
 
