@@ -25,11 +25,6 @@ def handle_error(error):
         if type(code) is int:
             status_code = code
 
-    try:
-        print_last()
-    except ValueError as e:
-        print("No exception to print")
-
     return jsonify(response), status_code
 
 class RoasteryApp(FlaskAPI):
