@@ -15,8 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.conf import settings
+
+def user_logout(request):
+    logout(request)
+    return redirect('/')
 
 urlpatterns = [
+    path('', include(('index.urls', 'index'), namespace="index")),
+    path('auth/logout', user_logout, name="logout"),
+    path('auth/', include('social_django.urls', namespace='social')),
+    path('roast/', include(('roast.urls', 'roast'), namespace='roast')),
     path('admin/', admin.site.urls),
-    path('', include('index.urls'))
 ]

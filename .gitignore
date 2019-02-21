@@ -4,3 +4,4 @@ theroast/
 .vscode/
 tests/
 *.pyc
+db.sqlite3
