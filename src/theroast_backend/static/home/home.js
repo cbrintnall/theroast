@@ -23,6 +23,7 @@ var cRange = `
         max="100"
         step="1"
         v-on:change="setColorIndex"
+        v-on:input="setColorIndex"
     >
 </div>
 `
