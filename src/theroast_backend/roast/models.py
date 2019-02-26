@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth import get_user_model
+
+USER_MODEL = get_user_model()
 
 class Roast(models.Model):
     # Name of the roast
@@ -9,6 +12,21 @@ class Roast(models.Model):
     color = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                 default=0)
 
+class ContactInfo(models.Model):
+    """
+    We make this a database model since
+    a company, shop, and roastery may have a
+    common contact info. These values
+    will all be unique.
+
+    email
+    phone number
+
+    maybe more
+
+    """
+    pass
+
 class Company(models.Model):
     """
     Parent object to a collection of shops
@@ -16,6 +34,7 @@ class Company(models.Model):
     coffee shops will serve other roasts, but 
     then expand into roasting as well.
     """
+    owner = models.ForeignKey(USER_MODEL, related_name='company_owner', null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=240)
     roasterys = models.ForeignKey('Roastery', related_name='roasteries', null=True, on_delete=models.SET_NULL)
     shops = models.ForeignKey('Shop', related_name='shops', null=True, on_delete=models.SET_NULL)
@@ -24,6 +43,7 @@ class Shop(models.Model):
     """
     Represents a physical coffee shop.
     """
+    owner = models.ForeignKey(USER_MODEL, related_name='shop_owner', null=True, on_delete=models.SET_NULL)
     serves_food = models.BooleanField()
     has_seating = models.BooleanField()
     roasts = models.ManyToManyField('Roast', related_name='shop_roasts')
@@ -37,6 +57,7 @@ class Roastery(models.Model):
     """
     Represents a physical roastery.
     """
+    owner = models.ForeignKey(USER_MODEL, related_name='roastery_owner', null=True, on_delete=models.SET_NULL)
     roasts = models.ForeignKey('Roast', related_name='roastery_roasts', on_delete=models.CASCADE)
 
     """
