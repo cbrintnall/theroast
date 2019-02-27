@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+    <roast_list>
+    </roast_list>
+</div>
+{% endblock %}
+
+{% block post_body_static %}
+<script>
+Vue.component('roast_list', {
+    data() {
+        return {
+            roasts: []
+        }
+    },
+    created() {
+        var self = this;
+        axios.get('/roast/create')
+            .then(function (response) {
+                response.data.forEach((r) => {
+                    console.log(r)
+                    self.roasts.push(r)
+                })
+            })
+            .catch(function (error) {
+                alert(error);
+            });
+    },
+    template: `
+    <div>
+        <ul>
+            <li v-for="roast in roasts">
+                <p>{{roast}}</p>
+            </li>
+        </ul>
+    </div>
+    `
+})
+</script>
+{% endblock %}

@@ -19,7 +19,7 @@ class RoastCreate(CreateView):
     fields = ('name', 'color')
     template_name = 'home.html'
 
-class RoastList(ListView):
-    model = Roast
-    template_name = "roast_list.html"
+# class RoastList(ListView):
+#     model = Roast
+#     template_name = "roast_list.html"
 
