@@ -5,3 +5,4 @@ theroast/
 tests/
 *.pyc
 db.sqlite3
+migrations/

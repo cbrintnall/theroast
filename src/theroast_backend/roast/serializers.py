@@ -4,4 +4,4 @@ from roast.models import Roast
 class RoastSerializer(serializers.ModelSerializer):
     class Meta:
         model = Roast
-        fields = ('id', 'name', 'color')
+        fields = ('id', 'name', 'color', 'description')

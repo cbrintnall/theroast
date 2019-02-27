@@ -10,10 +10,12 @@
 
 {% block post_body_static %}
 <script>
+
 Vue.component('roast_list', {
+    delimiters: ["[[", "]]"],
     data() {
         return {
-            roasts: []
+            roasts: [],
         }
     },
     created() {
@@ -21,7 +23,6 @@ Vue.component('roast_list', {
         axios.get('/roast/create')
             .then(function (response) {
                 response.data.forEach((r) => {
-                    console.log(r)
                     self.roasts.push(r)
                 })
             })
@@ -31,13 +32,35 @@ Vue.component('roast_list', {
     },
     template: `
     <div>
-        <ul>
-            <li v-for="roast in roasts">
-                <p>{{roast}}</p>
+        <ul style="padding: 0px;">
+            <li 
+                v-for="roast in roasts"
+                style="list-style-type: none; padding-top: 12px;"
+            >
+                <roast_item
+                    v-bind:title="roast.name"
+                    v-bind:color="roast.color"
+                    v-bind:description="roast.description"
+                ></roast_item>
             </li>
         </ul>
     </div>
-    `
+    `,
+})
+Vue.component('roast_item', {
+    props: ["title", "description", "color"],
+    delimiters: ["[[", "]]"],
+    template: `
+    <div>
+        <a href="#" class="list-group-item list-group-item-action active">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">[[ title ]]</h5>
+                <small>Color (1-100): [[ color ]]</small>
+            </div>
+            <p class="mb-1">[[ description ]]</p>
+        </a>
+    </div>
+    `,
 })
 </script>
 {% endblock %}

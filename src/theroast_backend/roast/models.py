@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 USER_MODEL = get_user_model()
 
 class Roast(models.Model):
-    
+    description = models.CharField(max_length=350)
 
     # Name of the roast
     name = models.CharField(max_length=120)
