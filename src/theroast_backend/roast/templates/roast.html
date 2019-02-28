@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div>
+<div id="roast-app">
     <roast_list>
     </roast_list>
 </div>
@@ -41,6 +41,7 @@ Vue.component('roast_list', {
                     v-bind:title="roast.name"
                     v-bind:color="roast.color"
                     v-bind:description="roast.description"
+                    v-bind:dark="true"
                 ></roast_item>
             </li>
         </ul>
@@ -48,17 +49,15 @@ Vue.component('roast_list', {
     `,
 })
 Vue.component('roast_item', {
-    props: ["title", "description", "color"],
+    props: ["title", "description", "color", "dark"],
     delimiters: ["[[", "]]"],
     template: `
-    <div>
-        <a href="#" class="list-group-item list-group-item-action active">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">[[ title ]]</h5>
-                <small>Color (1-100): [[ color ]]</small>
-            </div>
-            <p class="mb-1">[[ description ]]</p>
-        </a>
+    <div class="card" style="padding: 12px;" v-bind:class="{ 'text-white': dark, 'bg-dark': dark }">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">[[ title ]]</h5>
+            <small>Color (1-100): [[ color ]]</small>
+        </div>
+        <p class="mb-1">[[ description ]]</p>
     </div>
     `,
 })

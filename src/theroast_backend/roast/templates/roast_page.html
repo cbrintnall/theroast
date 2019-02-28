@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<roast_page>
+</roast_page>
+{% endblock %}
+
+{% block post_body_static %}
+<script src="{% static 'components/roast_bar.js' %}"></script>
+
+<script>
+Vue.component('roast_page', {
+    delimiters: ["[[", "]]"],
+    created() {
+        var self = this;
+        axios.get('{% url 'roast:detail' pk=pk %}')
+            .then(function (response) {
+                self.roast = response.data
+            })
+            .catch(function (error) {
+                alert(error);
+            });
+    },
+    data() {
+        return {
+            roast: null
+        }
+    },
+    template: `
+    <div>
+        <div>
+            <div class="card bg-dark text-white" style="margin: 12px;">
+                <div class="card-body" style="padding: 6px;">
+                    <h1>[[ roast.name ]]</h1>
+                </div>
+            </div>
+            <color-range
+                v-bind:colors="[{ color: '#FFD659'}]"
+            />
+        </div>
+        <hr />
+        <div>
+            <div>
+                <img src="https://placekitten.com/400/500" style="float: left;">
+                <div style="float: left; margin-left: 12px;">
+                    <h3>About this roast:</h3>
+                    <hr />
+                    <div>
+                        [[ roast.description ]]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `
+})
+</script>
+{% endblock %}
