@@ -5,6 +5,45 @@
         url: "/url/to/search/roasts"
     }
 */
+
+Vue.component('form-label', {
+  template: `
+  <label style="width: 100%;">
+    <h2 style="border-bottom: 1px solid black;"><slot></slot></h2>
+  </label>
+  `
+})
+
+Vue.component('roast-input', {
+  props: ["title", "placeholder"],
+  template:`
+  <div>
+    <label style="display: inline-block; margin-bottom: 0px;">
+      <span style="margin-bottom: 0px; margin-right: 2px; font-size: 22px;">
+        <strong>{{title}}</strong>
+      </span>
+    </label>
+    <input type="text" v-bind:placeholder="placeholder" style="display: inline-block; border: none; height: 100%;">
+    <hr style="margin: 0px; background-color: black;" />
+  </div>
+  `
+})
+
+Vue.component('roast-textarea', {
+  props: ["title", "placeholder"],
+  template:`
+  <div>
+    <label style="display: inline-block; margin-bottom: 0px;">
+      <span style="margin-bottom: 0px; margin-right: 2px; font-size: 22px;">
+        <strong>{{title}}</strong>
+      </span>
+    </label>
+    <input type="text" v-bind:placeholder="placeholder" style="display: inline-block; border: none; height: 100%;">
+    <hr style="margin: 0px; background-color: black;" />
+  </div>
+  `
+})
+
 Vue.component('roast-search', {
   props: ["options"],
   template: `

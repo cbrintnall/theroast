@@ -2,16 +2,22 @@
 {% load static %}
 
 {% block content %}
-<div>
-    <h2> Create a new roast: </h2>
+<div id="home-app" style="margin-top: 12px">
+    <h2 style="text-align: center;" id="roast-title"> ☕ Upload a new roast ☕ </h2>
+    <hr style="margin-top: 24px"/>
     <form method="POST" action="{% url 'roast:create' %}">
         {% csrf_token %}
-        <div class="form-group">
-            <label>Name:</label>
-            <input name="name" class="form-control" placeholder="Mighty Titan..">
-            <label>Description:</label>
-            <input name="description" class="form-control" placeholder="This powerful blend contains..">
-            <color-range></color-range>
+        <div class="form-group row">
+            <div class="col">
+                <text-input title="Name:" placeholder="Mighty Titan">
+                </text-input>
+                <label>Description:</label>
+                <textarea rows="10" name="description" class="form-control" placeholder="This powerful blend contains.."></textarea>
+            </div>
+            <div class="col">
+                <label for="image">Image:</label>
+                <input name="image" type="file" class="form-control-file" id="image">
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -23,4 +29,28 @@
 
 {% block post_body_static %}
 <script src="{% static 'home/home.js' %}"></script>
+<style>
+label {
+    margin-top: 12px;
+}
+
+#roast-title {
+
+    margin: 12px;
+
+    /* #1 */
+    border: 5px solid hsl(0, 0%, 40%);
+
+    /* #2 */
+    padding: 5px;
+
+    /* #3 */
+    outline: 5px solid hsl(0, 0%, 60%);
+
+    /* #4 AND INFINITY!!! (CSS3 only) */
+    box-shadow:
+        0 0 0 10px hsl(0, 0%, 80%),
+        0 0 0 15px hsl(0, 0%, 90%);
+}
+</style>
 {% endblock %}

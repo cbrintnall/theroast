@@ -1,13 +1,11 @@
-console.log("hello?");
-
 Vue.component('color-range', {
-    // props: ['name'],
+    props: ['name'],
     data() {
         return {
             colors: [
-                { color: "#FFD659", amount: 33},
-                { color: "#7F5B5A", amount: 33},
-                { color: "#403736", amount: 33},
+                { color: "#FFD659", amount: 33.3},
+                { color: "#7F5B5A", amount: 33.3},
+                { color: "#403736", amount: 33.3},
             ],
         }
     },
@@ -17,10 +15,13 @@ Vue.component('color-range', {
             v-for="c in this.colors"
             class="progress-bar" 
             role="progressbar"
-            v-bind:style="{ width: amount + '%', backgroundColor: c.color }"
+            v-bind:style="{ width: c.amount + '%', backgroundColor: c.color }"
         >
         </div>
-        <h1>Hello.</h1>
     </div>
     `
+})
+
+var app = new Vue({
+    el: '#home-app'
 })
