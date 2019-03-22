@@ -1,11 +1,12 @@
 # This file is strictly for development - Not to be used in production.
-
 version: '3'
 services:
   backend:
     restart: always
-    build: backend
+    build: theroast_backend
+    volumes:
+      - ./theroast_backend:/app
     ports:
-      - "5000:5000"
+      - 8000:8000
     environment:
-      - TEST=HELLO
+      - ENV=nonprod
