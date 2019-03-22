@@ -1,3 +1,5 @@
+console.log("hello?");
+
 Vue.component('color-range', {
     // props: ['name'],
     data() {

@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.conf import settings
@@ -29,4 +30,4 @@ urlpatterns = [
     path('roast/', include(('roast.urls', 'roast'), namespace='roast')),
     path('admin/', admin.site.urls),
     path('', include(('index.urls', 'index'), namespace="index")),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
