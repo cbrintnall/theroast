@@ -16,30 +16,16 @@ Vue.component('form-label', {
 
 Vue.component('roast-input', {
   props: ["title", "placeholder"],
-  mounted() {
-    var self = this;
-    this.interval = setInterval(() => {
-      if (typeof(this._currentHrWidth) != undefined && !isNaN(this._currentHrWidth)) {
-        self._currentHrWidth ++;
-        console.log(self._currentHrWidth);
-      }
-    }, 1000)
-  },
-  data() {
+  data: function() {
     return {
-      _currentHrWidth: 0,
-      interval: undefined,
+      focused: false,
     }
   },
-  computed: {
-    hrWidth: function() {
-      if (this._currentHrWidth >= 100) {
-        this._currentHrWidth = 100
-        clearInterval(this.interval)
-      }
-      return this._currentHrWidth
+  methods: {
+    showLine() {
+      this.focused = !this.focused;
     }
-  },
+  },  
   template:`
   <div>
     <label style="display: inline-block; margin-bottom: 0px;">
@@ -47,8 +33,10 @@ Vue.component('roast-input', {
         <strong>{{ title }}</strong>
       </span>
     </label>
-    <input type="text" v-bind:placeholder="placeholder" style="display: inline-block; border: none; height: 100%;">
-    <hr style="margin: 0px; background-color: black;" v-bind:style="{width: this.hrWidth + '0%'}" />
+    <input @mouseover="showLine" @mouseout="showLine" type="text" v-bind:placeholder="placeholder" style="display: inline-block; border: none; height: 100%;">
+    <transition name="fade">
+      <hr v-if="focused" style="margin: 0px; background-color: black;" v-bind:style="{ width: this.width+'%' }" />
+    </transition>
   </div>
   `
 })
@@ -85,8 +73,4 @@ Vue.component('roast-search', {
     </div>
   </form>  
     `
-});
-
-var app = new Vue({
-  el: "#app"
 });
