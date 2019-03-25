@@ -3,9 +3,9 @@ version: '3'
 services:
   backend:
     restart: always
-    build: theroast_backend
+    build: src
     volumes:
-      - ./theroast_backend:/app
+      - ./src:/app
     ports:
       - 8000:8000
     environment:
