@@ -3,7 +3,7 @@ h2,
 label,
 strong,
 input {
-    font-family: 'Inconsolata', monospace;
+    font-family: 'Merriweather', monospace;
 }
 
 h3,
@@ -11,18 +11,28 @@ h4,
 p,
 span,
 div {
-    font-family: 'Merriweather', serif;
+    font-family: 'Inconsolata', serif;
 }
 
 input:focus {
     outline: none;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.25s ease-out;
+.fade-enter-active {
+  animation: smoothEnlarge .5s;
 }
 
-.fade-enter, .fade-leave-to {
-  opacity: 0;
+.fade-leave-active {
+  animation: smoothEnlarge .25s reverse;
+}
+
+@keyframes smoothEnlarge {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
 }
 

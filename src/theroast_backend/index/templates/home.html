@@ -9,14 +9,16 @@
         {% csrf_token %}
         <div class="form-group row">
             <div class="col">
-                <roast-input title="Name:" placeholder="Mighty Titan">
+                <roast-input title="Name:" placeholder="Mighty Titan" textarea="false">
                 </roast-input>
                 <label>Description:</label>
                 <textarea rows="10" name="description" class="form-control" placeholder="This powerful blend contains.."></textarea>
             </div>
             <div class="col">
-                <label for="image">Image:</label>
-                <input name="image" type="file" class="form-control-file" id="image">
+                <roast-image-upload
+                    title="Upload Images:"
+                >
+                </roast-image-upload>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
