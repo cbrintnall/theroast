@@ -117,15 +117,6 @@ Vue.component('roast-image-upload', {
         <strong>{{ title }}</strong>
       </span>
     </label>
-    <br />
-    <button
-      style="margin-top: 6px;"
-      type="button" 
-      class="btn btn-outline-dark"
-      @click="clickFileUpload"
-    >
-      {{ btnText }}
-    </button>
     <input 
       ref="imageInput" 
       style="display: none;" 
@@ -140,7 +131,19 @@ Vue.component('roast-image-upload', {
       <img 
         v-for="file in files" 
         v-bind:src="file"
+        width="120"
+        height="120"
+        style="margin: 4px;"
       >
+      <br />
+      <button
+      style="margin-top: 6px;"
+      type="button" 
+      class="btn btn-outline-dark"
+      @click="clickFileUpload"
+      >
+        {{ btnText }}
+      </button>
     </div>
   </div>
   `
