@@ -69,21 +69,38 @@ Vue.component('roast-image-upload', {
   props: ["name", "title", "buttonText"],
   computed: {
     btnText() {
+      if (this.files.length > 0) {
+        return "Change Files"
+      }
+
       if (!this.buttonText) {
         return "Select Files"
-      } else {
-        return this.buttonText
       }
+
+      return this.buttonText;
+    }
+  },
+  data() {
+    return {
+      files: []
     }
   },
   methods: {
     clickFileUpload() {
       this.$refs.imageInput.click()
     },
-    getImageFromUpload() {
-      var reader = new FileReader();
-      reader.onload = function() {
-        console.log(this.$refs.imageInput.result)
+    getImageFromUpload(e) {
+      var files = e.target.files
+      var self = this
+
+      for (var i = 0; i < files.length; i++) {
+        var reader = new FileReader()
+
+        reader.onload = function(f) {
+          self.files.push(f)
+        }
+
+        reader.readAsText(files[i])
       }
     }
   },
@@ -111,7 +128,12 @@ Vue.component('roast-image-upload', {
       class="form-control-file" 
       id="image"
       @change="getImageFromUpload"
+      multiple
     >
+    <div style="backgroundColor: grey;">
+      <div v-for="file in files">
+      </div>
+    </div>
   </div>
   `
 })
