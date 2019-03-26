@@ -86,6 +86,11 @@ Vue.component('roast-image-upload', {
     }
   },
   methods: {
+    toBase(item) {
+      console.log(item)
+      console.log(btoa(item))
+      return btoa(item)
+    },
     clickFileUpload() {
       this.$refs.imageInput.click()
     },
@@ -97,10 +102,11 @@ Vue.component('roast-image-upload', {
         var reader = new FileReader()
 
         reader.onload = function(f) {
-          self.files.push(f)
+          var item = f.target.result
+          self.files.push(item)
         }
 
-        reader.readAsText(files[i])
+        reader.readAsDataURL(files[i])
       }
     }
   },
@@ -131,8 +137,10 @@ Vue.component('roast-image-upload', {
       multiple
     >
     <div style="backgroundColor: grey;">
-      <div v-for="file in files">
-      </div>
+      <img 
+        v-for="file in files" 
+        v-bind:src="file"
+      >
     </div>
   </div>
   `
