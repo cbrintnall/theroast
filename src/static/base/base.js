@@ -27,8 +27,13 @@ Vue.component('roast-input', {
     }
   },
   methods: {
-    showLine() { this.focused = !this.focused; },
-    checkText(e) { }
+    showLine() { 
+      this.focused = !this.focused; 
+    },
+    checkText(e) {
+      console.log(this.text)
+      console.log(e)
+    }
   },  
   template:`
   <div>
@@ -40,30 +45,48 @@ Vue.component('roast-input', {
         <strong>{{ title }}</strong>
       </span>
     </label>
-    <input @focus="showLine"
-           @blur="showLine"
-           @keyup="checkText"
-           v-model="text"
-           v-bind:placeholder="placeholder"
-           v-bind:name="name"
-           style="overflow: hidden; border: none; height: 100%; width: 100%;"
-           v-if="textarea"
+    <input 
+      v-model="text"
+      style="visibility: hidden; height: 0%;"
     >
-    <textarea @focus="showLine"
-              @blur="showLine"
-              @keyup="checkText"
-              v-model="text"
-              v-bind:placeholder="placeholder"
-              v-bind:name="name"
-              style="overflow: hidden; border: none; height: 100%; width: 100%;"
-              v-if="!textarea"
-    ></textarea>
+    <div ref="lines">
+      <roast-input-line 
+        v-model="text"
+        @keyup="checkText"
+      >
+      </roast-input-line>
+    </div>
     <transition name="fade">
       <hr v-if="focused" style="margin: 0px; background-color: black;" v-bind:style="{ width: this.width+'%' }" />
     </transition>
   </div>
   `
 })
+
+Vue.component('roast-input-line', {
+  methods: {
+    keyup(e) {
+      this.$emit('keyup', e)
+    }
+  },
+  template: `
+  <div 
+    contenteditable="true" 
+    @keyup="keyup"
+  >
+  </div>
+  `
+})
+
+    // <textarea @focus="showLine"
+    //           @blur="showLine"
+    //           @keyup="checkText"
+    //           v-model="text"
+    //           v-bind:placeholder="placeholder"
+    //           v-bind:name="name"
+    //           style="overflow: hidden; border: none; height: 100%; width: 100%;"
+    //           v-if="!textarea"
+    // ></textarea>
 
 Vue.component('roast-image-upload', {
   props: ["name", "title", "buttonText"],
@@ -117,7 +140,7 @@ Vue.component('roast-image-upload', {
         <strong>{{ title }}</strong>
       </span>
     </label>
-    <hr />
+    <hr v-if="files.length >= 1" />
     <button
       style="margin-top: 6px;"
       type="button" 
@@ -143,14 +166,15 @@ Vue.component('roast-image-upload', {
         v-bind:src="file"
         width="100"
         height="100"
-        class="shadow-lg p-3 mb-5 rounded"
-        style="margin: 6px;"
+        class="shadow-lg p-3 mb-5"
+        style="margin: 6px !important; padding: 8px !important;"
       >
       <br v-if="files.length >= 1" />
       <button
         type="button" 
         class="btn btn-outline-dark"
         @click="clickFileUpload"
+        style="margin-top: 12px;"
         v-if="files.length >= 1"
       >
         {{ btnText }}
@@ -160,36 +184,21 @@ Vue.component('roast-image-upload', {
   `
 })
 
-Vue.component('roast-textarea', {
-  props: ["title", "placeholder"],
-  template:`
-  <div>
-    <label style="display: inline-block; margin-bottom: 0px;">
-      <span style="margin-bottom: 0px; margin-right: 2px; font-size: 22px;">
-        <strong>{{title}}</strong>
-      </span>
-    </label>
-    <textarea type="text" style="display: inline-block; border: none; height: 100%;">{{placeholder}}</textarea>
-    <hr style="margin: 0px; background-color: black;" />
-  </div>
-  `
-})
-
 Vue.component('roast-search', {
   props: ["options"],
   template: `
-  <form class="form-inline my-2 my-lg-0" v-bind:action="options.url" action="GET">
-    <div class="input-group">
-        <div class="input-group-prepend">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ options.name }}</button>
-            <div class="dropdown-menu">
-            </div>
-        </div>
-        <input type="text" class="form-control" aria-label="Text input with dropdown button">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button">Search</button>
-        </div>
-    </div>
-  </form>  
+    <form class="form-inline my-2 my-lg-0" v-bind:action="options.url" action="GET">
+      <div class="input-group">
+          <div class="input-group-prepend">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ options.name }}</button>
+              <div class="dropdown-menu">
+              </div>
+          </div>
+          <input type="text" class="form-control" aria-label="Text input with dropdown button">
+          <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button">Search</button>
+          </div>
+      </div>
+    </form>  
     `
 });
