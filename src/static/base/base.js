@@ -20,19 +20,14 @@ Vue.component('form-label', {
 
 Vue.component('roast-input', {
   props: ["title", "placeholder", "name", "textarea"],
-  data: function() {
+  data() {
     return {
-      focused: false,
       text: "",
     }
   },
   methods: {
-    showLine() { 
-      this.focused = !this.focused; 
-    },
     checkText(e) {
       console.log(this.text)
-      console.log(e)
     }
   },  
   template:`
@@ -49,44 +44,56 @@ Vue.component('roast-input', {
       v-model="text"
       style="visibility: hidden; height: 0%;"
     >
-    <div ref="lines">
-      <roast-input-line 
-        v-model="text"
-        @keyup="checkText"
-      >
-      </roast-input-line>
-    </div>
-    <transition name="fade">
-      <hr v-if="focused" style="margin: 0px; background-color: black;" v-bind:style="{ width: this.width+'%' }" />
-    </transition>
+    <roast-input-line 
+      v-model="text"
+      @input="checkText"
+    >
+    </roast-input-line>
   </div>
   `
 })
 
 Vue.component('roast-input-line', {
+  prop: ["value"],
   methods: {
     keyup(e) {
-      this.$emit('keyup', e)
+      this.$emit('keyup', this)
+      var currentScrollWidth = this.$refs.input.scrollWidth
+      
+      if (currentScrollWidth > this._lastScrollWidth) {
+        this.$emit('overflowing', this)
+      }
+
+      this._lastScrollWidth = currentScrollWidth
+    },
+    handleInput(e) {
+      this.$emit('input', this.$refs.input.innerText)
+    },
+  },
+  data() {
+    return {
+      _lastScrollWidth: 0,
     }
   },
+  mounted() {
+    this._lastScrollWidth = this.$refs.input.scrollWidth
+  },
   template: `
-  <div 
-    contenteditable="true" 
-    @keyup="keyup"
-  >
+  <div>
+    <div 
+      contenteditable
+      style="max-width: 100%; white-space: nowrap; overflow: hidden;"
+      ref="input"
+      @keyup="keyup"
+      @input="handleInput"
+    >
+    </div>
+    <transition name="fade">
+        <hr style="margin: 0px; background-color: black;"/>
+    </transition>
   </div>
   `
 })
-
-    // <textarea @focus="showLine"
-    //           @blur="showLine"
-    //           @keyup="checkText"
-    //           v-model="text"
-    //           v-bind:placeholder="placeholder"
-    //           v-bind:name="name"
-    //           style="overflow: hidden; border: none; height: 100%; width: 100%;"
-    //           v-if="!textarea"
-    // ></textarea>
 
 Vue.component('roast-image-upload', {
   props: ["name", "title", "buttonText"],
