@@ -23,11 +23,16 @@ Vue.component('roast-input', {
   data() {
     return {
       text: "",
+      lines: [0]
     }
   },
   methods: {
-    checkText(e) {
-      console.log(this.text)
+    onOverflow(e) {
+      var lastCharacter = this.text.charAt(this.text.length - 1)
+      var newText = this.text.substring(0, this.text.length - 1)
+
+      this.text = newText
+      this.lines.push(0)
     }
   },  
   template:`
@@ -44,11 +49,14 @@ Vue.component('roast-input', {
       v-model="text"
       style="visibility: hidden; height: 0%;"
     >
-    <roast-input-line 
-      v-model="text"
-      @input="checkText"
-    >
-    </roast-input-line>
+    <div>
+      <roast-input-line 
+        v-model="text"
+        @overflowing="onOverflow"
+        v-for="line in lines"
+      >
+      </roast-input-line>
+    </div>
   </div>
   `
 })
@@ -100,7 +108,7 @@ Vue.component('roast-image-upload', {
   computed: {
     btnText() {
       if (this.files.length > 0) {
-        return "Change Files"
+        return "Add Files"
       }
 
       if (!this.buttonText) {
@@ -116,11 +124,6 @@ Vue.component('roast-image-upload', {
     }
   },
   methods: {
-    toBase(item) {
-      console.log(item)
-      console.log(btoa(item))
-      return btoa(item)
-    },
     clickFileUpload() {
       this.$refs.imageInput.click()
     },
@@ -132,7 +135,9 @@ Vue.component('roast-image-upload', {
         var reader = new FileReader()
 
         reader.onload = function(f) {
-          var item = f.target.result
+          var item = {
+            "content" : f.target.result
+          }
           self.files.push(item)
         }
 
@@ -148,6 +153,7 @@ Vue.component('roast-image-upload', {
       </span>
     </label>
     <hr v-if="files.length >= 1" />
+    <br v-if="files.length == 0" />
     <button
       style="margin-top: 6px;"
       type="button" 
@@ -168,14 +174,16 @@ Vue.component('roast-image-upload', {
       multiple
     >
     <div style="backgroundColor: none;">
-      <img 
-        v-for="file in files" 
-        v-bind:src="file"
-        width="100"
-        height="100"
-        class="shadow-lg p-3 mb-5"
-        style="margin: 6px !important; padding: 8px !important;"
-      >
+      <div>
+        <img 
+          v-for="file in files" 
+          v-bind:src="file.content"
+          width="100"
+          height="100"
+          class="shadow-lg p-3 mb-5"
+          style="margin: 6px !important; padding: 8px !important;"
+        >
+      </div>
       <br v-if="files.length >= 1" />
       <button
         type="button" 
