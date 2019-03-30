@@ -13,47 +13,52 @@ function isOverflown(element) {
 Vue.component('form-label', {
   template: `
   <label style="width: 100%;">
-    <h2 style="border-bottom: 1px solid black;"><slot></slot></h2>
+    <h3><slot></slot></h3>
   </label>
   `
 })
 
 Vue.component('roast-input', {
-  props: ["title", "placeholder", "name", "textarea"],
+  props: ["title", "placeholder", "name"],
   data() {
     return {
-      text: "",
-      lines: [0]
+      _count: 0,
+      lines: []
     }
+  },
+  mounted() {
+    this.addLine()
   },
   methods: {
     onOverflow(e) {
-      var lastCharacter = this.text.charAt(this.text.length - 1)
-      var newText = this.text.substring(0, this.text.length - 1)
+      // var lastCharacter = this.text.charAt(this.text.length - 1)
+      // var newText = this.text.substring(0, this.text.length - 1)
 
-      this.text = newText
-      this.lines.push(0)
+      // this.text = newText
+      this.addLine()
+    },
+    addLine() {
+      this.lines.push({"id": "line" + this._count++})
+    },
+    removeLine() {
+
     }
-  },  
+  },
   template:`
   <div>
-    <span ref="invisibleTextHash" style="visibility: hidden; position: fixed;">
-      {{ text }}
-    </span>
     <label style="display: inline-block; margin-bottom: 0px;">
       <span style="margin-bottom: 0px; margin-right: 2px; font-size: 22px;">
         <strong>{{ title }}</strong>
       </span>
     </label>
-    <input 
-      v-model="text"
+    <input
       style="visibility: hidden; height: 0%;"
     >
     <div>
-      <roast-input-line 
-        v-model="text"
-        @overflowing="onOverflow"
+      <roast-input-line
         v-for="line in lines"
+        ref="line.id"
+        @overflowing="onOverflow"
       >
       </roast-input-line>
     </div>
@@ -62,25 +67,46 @@ Vue.component('roast-input', {
 })
 
 Vue.component('roast-input-line', {
-  prop: ["value"],
+  props: ["name", "maxlength"],
   methods: {
     keyup(e) {
       this.$emit('keyup', this)
       var currentScrollWidth = this.$refs.input.scrollWidth
       
       if (currentScrollWidth > this._lastScrollWidth) {
-        this.$emit('overflowing', this)
+        this.$emit('overflowing', e)
       }
 
       this._lastScrollWidth = currentScrollWidth
     },
     handleInput(e) {
-      this.$emit('input', this.$refs.input.innerText)
+      this.$emit('input', divContent)
+
+      if (this.content.length >= this.maxlength) {
+        this.$emit('overflowing', e)
+        return;
+      }
+
+      var divContent = this.$refs.input.innerText;
+      this.content = divContent;
+    },
+    keydown(e) {
+      this.$emit('keydown', e)
+    },
+    onFocus(e) {
+      this.$emit('focus', e)
+      this.focused = true;
+    },
+    onBlur(e) {
+      this.$emit('blur', e)
+      this.focused = false;
     },
   },
   data() {
     return {
       _lastScrollWidth: 0,
+      content: "",
+      focused: false,
     }
   },
   mounted() {
@@ -88,16 +114,26 @@ Vue.component('roast-input-line', {
   },
   template: `
   <div>
+    <input 
+      v-bind:name="name"
+      v-bind:maxlength="maxlength"
+      :value="content"
+      type="hidden"
+    >
     <div 
-      contenteditable
-      style="max-width: 100%; white-space: nowrap; overflow: hidden;"
+      v-bind:maxlength="maxlength"
       ref="input"
+      @keydown="keydown"
       @keyup="keyup"
       @input="handleInput"
+      @focus="onFocus"
+      @blur="onBlur"
+      contenteditable
+      style="max-width: 100%; white-space: nowrap; overflow: hidden;"
     >
     </div>
     <transition name="fade">
-        <hr style="margin: 0px; background-color: black;"/>
+        <hr v-if="focused" style="margin: 0px; background-color: black;"/>
     </transition>
   </div>
   `
@@ -202,18 +238,30 @@ Vue.component('roast-image-upload', {
 Vue.component('roast-search', {
   props: ["options"],
   template: `
-    <form class="form-inline my-2 my-lg-0" v-bind:action="options.url" action="GET">
+    <form v-bind:action="options.url" action="GET">
       <div class="input-group">
           <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ options.name }}</button>
+              <button 
+                class="btn btn-secondary dropdown-toggle" 
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false"
+              >
+                {{ options.name }}
+              </button>
               <div class="dropdown-menu">
               </div>
           </div>
-          <input type="text" class="form-control" aria-label="Text input with dropdown button">
+          <input type="text" class="form-control">
           <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="button">Search</button>
+              <button class="btn btn-secondary" type="button">Search</button>
           </div>
       </div>
     </form>  
     `
 });
+
+var app = new Vue({
+  el: "#app"
+})

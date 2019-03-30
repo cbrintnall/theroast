@@ -9,10 +9,12 @@
         {% csrf_token %}
         <div class="form-group row">
             <div class="col">
-                <roast-input title="Name:" placeholder="Mighty Titan" textarea="false">
-                </roast-input>
-                <roast-input title="Description:" placeholder="A powerful blend containing.." textarea="true">
-                </roast-input>
+                <form-label>Name:</form-label>
+                <roast-input-line title="Name:" placeholder="Mighty Titan" name="name" maxlength="5">
+                </roast-input-line>
+                <form-label>Description:</form-label>
+                <roast-input-line title="Description:" placeholder="A powerful blend containing.." name="description">
+                </roast-input-line>
             </div>
             <div class="col">
                 <roast-image-upload
