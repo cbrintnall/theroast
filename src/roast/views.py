@@ -23,11 +23,6 @@ class RoastCrud(generics.RetrieveUpdateDestroyAPIView):
     queryset = Roast.objects.all()
     serializer_class = RoastSerializer
 
-class RoastCreate(CreateView):
-    model = Roast
-    fields = ('name', 'color')
-    template_name = 'home.html'
-
 # class RoastList(ListView):
 #     model = Roast
 #     template_name = "roast_list.html"

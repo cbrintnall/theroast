@@ -1,7 +1,5 @@
 h1,
 h2,
-label,
-strong,
 input {
     font-family: 'Merriweather', monospace;
 }
@@ -10,6 +8,8 @@ h3,
 h4,
 p,
 span,
+label,
+strong,
 div {
     font-family: 'Inconsolata', serif;
 }

@@ -3,27 +3,22 @@
 
 {% block content %}
 <div id="home-app" style="margin-top: 12px">
-    <h2 style="text-align: center;" id="roast-title"> ☕ Upload a new roast ☕ </h2>
+    <h2 style="text-align: center; background-color: white;" id="roast-title"> ☕ Upload a new roast ☕ </h2>
     <hr style="margin-top: 24px"/>
     <form method="POST" action="{% url 'roast:create' %}">
         {% csrf_token %}
         <div class="form-group row">
             <div class="col">
                 <form-label>Name:</form-label>
-                <roast-input-line title="Name:" placeholder="Mighty Titan" name="name" maxlength="5">
-                </roast-input-line>
-                <form-label>Description:</form-label>
-                <roast-input-line title="Description:" placeholder="A powerful blend containing.." name="description">
-                </roast-input-line>
-            </div>
-            <div class="col">
-                <roast-image-upload
-                    title="Upload Images:"
-                >
-                </roast-image-upload>
+                <roast-input-line title="Name:" placeholder="Mighty Titan" name="name" style="margin-bottom: 6px;"></roast-input-line>
+                <form-label>Short Description:</form-label>
+                <roast-input-line title="Short Description:" placeholder="A powerful blend containing.." name="description" style="margin-bottom: 6px;"></roast-input-line>
+                <form-label>Long Description:</form-label>
+                <roast-input-line title="Long Description:" placeholder="A powerful blend containing.." name="description" style="margin-bottom: 6px;"></roast-input-line>
+                <roast-image-upload title="Upload Images:"></roast-image-upload>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-dark btn-block shadow-lg mb-5 pill">Submit</button>
     </form>
 </div>
 {% endblock %}
@@ -53,7 +48,8 @@ label {
     /* #4 AND INFINITY!!! (CSS3 only) */
     box-shadow:
         0 0 0 10px hsl(0, 0%, 80%),
-        0 0 0 15px hsl(0, 0%, 90%);
+        0 0 0 15px hsl(0, 0%, 90%),
+        0 0 0 20px hsl(0, 0%, 95%);
 }
 </style>
 {% endblock %}

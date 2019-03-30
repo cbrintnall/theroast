@@ -14,6 +14,11 @@ class Roast(models.Model):
     color = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                 default=0)
 
+class RoastImage(models.Model):
+    owner = models.ForeignKey(Roast, related_name='owner', on_delete=models.CASCADE)
+    cloud_prefix = models.CharField(max_length=20)
+    path = models.CharField()
+
 class ContactInfo(models.Model):
     """
     We make this a database model since

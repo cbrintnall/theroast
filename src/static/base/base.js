@@ -1,19 +1,11 @@
-/*
-    Expects a SEARCH object, as so:
-    {
-        name: "Roasts",
-        url: "/url/to/search/roasts"
-    }
-*/
-
 function isOverflown(element) {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
 
 Vue.component('form-label', {
   template: `
-  <label style="width: 100%;">
-    <h3><slot></slot></h3>
+  <label style="width: 100%; margin: 0px;">
+    <h3 style="margin: 0px;"><slot></slot></h3>
   </label>
   `
 })
@@ -48,7 +40,7 @@ Vue.component('roast-input', {
   <div>
     <label style="display: inline-block; margin-bottom: 0px;">
       <span style="margin-bottom: 0px; margin-right: 2px; font-size: 22px;">
-        <strong>{{ title }}</strong>
+        {{ title }}
       </span>
     </label>
     <input
@@ -129,11 +121,12 @@ Vue.component('roast-input-line', {
       @focus="onFocus"
       @blur="onBlur"
       contenteditable
-      style="max-width: 100%; white-space: nowrap; overflow: hidden;"
+      class="bg-dark text-light"
+      style="max-width: 100%; white-space: nowrap; overflow: hidden; background-color: "
     >
     </div>
     <transition name="fade">
-        <hr v-if="focused" style="margin: 0px; background-color: black;"/>
+        <hr v-if="focused" class="bg-light" style="margin: 0px;"/>
     </transition>
   </div>
   `
@@ -183,10 +176,9 @@ Vue.component('roast-image-upload', {
   },
   template:`
   <div>
-    <label style="display: inline-block; margin-bottom: 0px;">
-      <span style="margin-bottom: 0px; margin-right: 2px; font-size: 22px;">
-        <strong>{{ title }}</strong>
-      </span>
+    <form-label>
+      {{ title }}
+    </form-label>
     </label>
     <hr v-if="files.length >= 1" />
     <br v-if="files.length == 0" />
