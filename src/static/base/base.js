@@ -145,6 +145,15 @@ Vue.component('roast-image-upload', {
       }
 
       return this.buttonText;
+    },
+    submittedData() {
+      var files = []
+      console.log("Sending " + files)
+      this.files.forEach((f) => {
+        files.push(f.content)
+      })
+      console.log("Sending " + files)
+      return files
     }
   },
   data() {
@@ -164,9 +173,11 @@ Vue.component('roast-image-upload', {
         var reader = new FileReader()
 
         reader.onload = function(f) {
+          // Create an file image object
           var item = {
             "content" : f.target.result
           }
+
           self.files.push(item)
         }
 
@@ -192,14 +203,18 @@ Vue.component('roast-image-upload', {
       {{ btnText }}
     </button>
     <input 
-      ref="imageInput" 
-      style="display: none;" 
-      v-bind:name="name" 
+      ref="imageInput"
+      style="display: none;"
       type="file" 
       class="form-control-file" 
       id="image"
       @change="getImageFromUpload"
       multiple
+    >
+    <input
+      v-bind:name="name"
+      v-model="submittedData"
+      type="hidden"
     >
     <div style="backgroundColor: none;">
       <div>

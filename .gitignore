@@ -1,6 +1,5 @@
 __pycache__/
 tmp/
-theroast/
 .vscode/
 tests/
 *.pyc

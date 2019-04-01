@@ -4,20 +4,25 @@ from django.contrib.auth import get_user_model
 
 USER_MODEL = get_user_model()
 
-class Roast(models.Model):
-    description = models.CharField(max_length=350)
+class RoastImage(models.Model):
+    path = models.CharField(max_length=200)
+    position = models.IntegerField(default=0)
 
-    # Name of the roast
+class Roast(models.Model):
+    long_description = models.CharField(max_length=800)
+    short_description = models.CharField(max_length=120)
     name = models.CharField(max_length=120)
 
     # Scale of 1-100 of how dark / light the roast is
     color = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                 default=0)
 
-class RoastImage(models.Model):
-    owner = models.ForeignKey(Roast, related_name='owner', on_delete=models.CASCADE)
-    cloud_prefix = models.CharField(max_length=20)
-    path = models.CharField()
+    # Indicates if the coffee information will be shown
+    # since it must be approved.
+    ready = models.BooleanField(default=False)
+
+    # All images
+    images = models.ForeignKey(RoastImage, related_name='images', on_delete=models.CASCADE)
 
 class ContactInfo(models.Model):
     """
