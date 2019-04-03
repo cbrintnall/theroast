@@ -2,6 +2,57 @@ function isOverflown(element) {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
 
+function formSerialize(formElement) {
+  const values = {};
+  const inputs = formElement.elements;
+
+  for (let i = 0; i < inputs.length; i++) {
+    values[inputs[i].name] = inputs[i].value;
+  }
+  return values;
+}
+
+Vue.component('roast-form', {
+  props: ["method", "action"],
+  methods: {
+    submit(e) {
+      if (e.preventDefault) e.preventDefault();
+      var data = this.serializeForm();
+      console.log(data)
+      axios({
+        url: this.action,
+        method: this.method,
+        data: data
+      })
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((response) => {
+          console.log(response)
+        })
+    },
+    // * Serialize all form data into a query string
+    // * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+    serializeForm() {
+      var data = {}
+      $(this.$refs.form).serializeArray().map((val) => {
+        data[val.name] = val.value;
+      });
+      return data
+    }
+  },
+  template: `
+  <form 
+    :method="method" 
+    :action="action" 
+    @submit="submit"
+    ref="form"
+  >
+    <slot></slot>
+  </form>
+  `
+})
+
 Vue.component('form-label', {
   template: `
   <label style="width: 100%; margin: 0px;">
@@ -59,7 +110,7 @@ Vue.component('roast-input', {
 })
 
 Vue.component('roast-input-line', {
-  props: ["name", "maxlength"],
+  props: ["name", "maxlength", "placeholder"],
   methods: {
     keyup(e) {
       this.$emit('keyup', this)
@@ -147,13 +198,9 @@ Vue.component('roast-image-upload', {
       return this.buttonText;
     },
     submittedData() {
-      var files = []
-      console.log("Sending " + files)
-      this.files.forEach((f) => {
-        files.push(f.content)
+      return this.files.map((f) => {
+        return f.content
       })
-      console.log("Sending " + files)
-      return files
     }
   },
   data() {
@@ -209,12 +256,8 @@ Vue.component('roast-image-upload', {
       class="form-control-file" 
       id="image"
       @change="getImageFromUpload"
-      multiple
-    >
-    <input
       v-bind:name="name"
-      v-model="submittedData"
-      type="hidden"
+      multiple
     >
     <div style="backgroundColor: none;">
       <div>
@@ -241,6 +284,12 @@ Vue.component('roast-image-upload', {
   </div>
   `
 })
+
+{/* <input
+v-bind:name="name"
+v-model="submittedData"
+type="hidden"
+> */}
 
 Vue.component('roast-search', {
   props: ["options"],

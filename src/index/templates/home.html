@@ -5,7 +5,7 @@
 <div id="home-app" style="margin-top: 12px">
     <h2 style="text-align: center; background-color: white;" id="roast-title"> ☕ Upload a new roast ☕ </h2>
     <hr style="margin-top: 24px"/>
-    <form method="POST" action="{% url 'roast:roasts' %}">
+    <roast-form method="POST" action="{% url 'roast:roasts' %}">
         {% csrf_token %}
         <div class="form-group row">
             <div class="col">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <button type="submit" class="btn btn-dark btn-block shadow-lg mb-5 pill">Submit</button>
-    </form>
+    </roast-form>
 </div>
 {% endblock %}
 

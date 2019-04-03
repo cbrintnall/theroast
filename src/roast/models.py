@@ -2,9 +2,12 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 
+import uuid
+
 USER_MODEL = get_user_model()
 
 class RoastImage(models.Model):
+    unique_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     path = models.CharField(max_length=200)
     position = models.IntegerField(default=0)
 
