@@ -3,41 +3,36 @@ from roast.models import Roast, RoastImage
 from roast.utils.gcs_utils import upload_b64
 
 class RoastImageSerializer(serializers.ModelSerializer):
-    # Takes in base64 data to 
-    # ingest to google cloud storage
+    content = serializers.CharField(write_only=True)
+    unique_id = serializers.CharField(read_only=True)
+
     def create(self, data):
-        path = upload_b64(data)
-        print(path)
+        content = data.get('content')
+        path = upload_b64(content)
+        return RoastImage.objects.create(path=path)
 
     class Meta:
         model = RoastImage
-        fields = '__all__'
+        fields = ('content', 'unique_id')
 
 class RoastSerializer(serializers.ModelSerializer):
-    # for taking in a base64 image from frontend
-    images = serializers.ListField(child=serializers.ImageField(), min_length=1)
+    images = serializers.ListField(child=RoastImageSerializer())
+    ready = serializers.BooleanField(read_only=True)
 
     def create(self, data):
-        # TODO: Figure out another way to get image 
-        # information from frontend
-        images_values = data.pop("images")
-        images = []
+        images = data.pop('images')
         serializer = RoastImageSerializer()
+        instances = []
 
-        # Create all images via serializer
-        for image in images_values.split("*"):
-            print("--------------------------------------------------------------")
-            print("--------------------------------------------------------------")
-            print(image)
-            images.append(serializer.create(image))
-
-        roast = super(RoastSerializer, self).create(data) 
-        
-        # Add images as foreign keys to the roast.
         for image in images:
-            pass
+            instances.append(serializer.create(image))
 
-        return 
+        roast = Roast(**data)
+        roast.images = instances
+        roast.save()
+
+        return roast
+
 
     class Meta:
         model = Roast

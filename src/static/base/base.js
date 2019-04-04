@@ -2,44 +2,61 @@ function isOverflown(element) {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
 
-function formSerialize(formElement) {
-  const values = {};
-  const inputs = formElement.elements;
-
-  for (let i = 0; i < inputs.length; i++) {
-    values[inputs[i].name] = inputs[i].value;
-  }
-  return values;
-}
-
 Vue.component('roast-form', {
   props: ["method", "action"],
   methods: {
     submit(e) {
-      if (e.preventDefault) e.preventDefault();
-      var data = this.serializeForm();
-      console.log(data)
-      axios({
-        url: this.action,
-        method: this.method,
-        data: data
+      if (e.preventDefault) e.preventDefault()
+      var childrenInput = Array.from(this.$refs.form.querySelectorAll('input'))
+
+      var objects = childrenInput
+        .filter((ele) => {
+          return ele.nodeName.toLowerCase() === 'input' || 
+                                      ele.hasAttribute('r-input') 
       })
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((response) => {
-          console.log(response)
-        })
+        .map((ele) => { 
+          return this.processInput(ele) 
+      })
+
+      payload = Object.assign({}, ...objects);
+      
+      console.log(payload)
+
+      axios({
+        method: this.method,
+        url: this.action,
+        data: payload
+      })
+        .then((data) => {
+          console.log(data)
+      })
+        .catch((error) => {
+          console.error(error)
+      })
     },
-    // * Serialize all form data into a query string
-    // * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
-    serializeForm() {
-      var data = {}
-      $(this.$refs.form).serializeArray().map((val) => {
-        data[val.name] = val.value;
-      });
-      return data
-    }
+    /* Takes in an input, transforms it into JSON */
+    processInput(element) {
+      var payload = { }
+      var key = element.getAttribute('name')
+      var value = element.getAttribute('value')
+
+      if (!key) {
+        console.error(`Invalid key for ${element}.`)
+        return payload
+      }
+
+      if (!value) {
+        value = element.innerText;
+      }
+
+      try {
+        value = JSON.parse(value);
+      } catch {
+      }
+
+      payload[key] = value;
+      return payload
+    },
   },
   template: `
   <form 
@@ -197,9 +214,9 @@ Vue.component('roast-image-upload', {
 
       return this.buttonText;
     },
-    submittedData() {
+    value() {
       return this.files.map((f) => {
-        return f.content
+        return { 'content': f.content.split(',')[1] }
       })
     }
   },
@@ -249,6 +266,12 @@ Vue.component('roast-image-upload', {
     >
       {{ btnText }}
     </button>
+    <input
+      type="hidden"
+      :name="name"
+      :value="JSON.stringify(value)"
+    >
+
     <input 
       ref="imageInput"
       style="display: none;"
@@ -256,7 +279,6 @@ Vue.component('roast-image-upload', {
       class="form-control-file" 
       id="image"
       @change="getImageFromUpload"
-      v-bind:name="name"
       multiple
     >
     <div style="backgroundColor: none;">
