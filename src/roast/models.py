@@ -6,6 +6,12 @@ import uuid
 
 USER_MODEL = get_user_model()
 
+class RoastImage(models.Model):
+    unique_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    path = models.CharField(max_length=200)
+    position = models.IntegerField(default=0)
+    # owner = models.ForeignKey(Roast, null=True, on_delete=models.CASCADE)
+
 class Roast(models.Model):
     long_description = models.CharField(max_length=800)
     short_description = models.CharField(max_length=120)
@@ -18,12 +24,7 @@ class Roast(models.Model):
     # Indicates if the coffee information will be shown
     # since it must be approved.
     ready = models.BooleanField(default=False)
-
-class RoastImage(models.Model):
-    unique_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    path = models.CharField(max_length=200)
-    position = models.IntegerField(default=0)
-    owner = models.ForeignKey(Roast, related_name='roast', null=True, on_delete=models.CASCADE)
+    images = models.ManyToManyField(RoastImage)
 
 class ContactInfo(models.Model):
     """

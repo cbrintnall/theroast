@@ -11,6 +11,6 @@ roasts = Roasts.as_view({
 })
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='roast.html'), name='roast_test'),
-    path('roast', roasts, name="roasts"),
+    path('id/<int:pk>', TemplateView.as_view(template_name='roast.html')),
+    path('', roasts, name="roasts"),
 ]

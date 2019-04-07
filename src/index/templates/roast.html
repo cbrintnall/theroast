@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% endblock %}
+
+{% block rightcol %}
+<div id="roast-app">
+    <roast-page>
+    </roast-page>
+</div>
+{% endblock %}
+
+{% block post_body_static %}
+<script>
+Vue.component('roast-page', {
+    props: ["roast"],
+    template: `
+    <div style="text-align: center; width: 100%; height: 100%;">
+        <h2></h2>
+        <hr />
+        <roast-image src="">
+        </roast-image>
+    </div>
+    `
+})
+
+var app = new Vue({
+    el: "#roast-app",
+    data: {
+        // PK will be replaced by Django's templating engine.
+        key: parseInt("{{ pk }}"),
+        roast: {}
+    },
+    mounted() { }
+})
+</script>
+{% endblock %}

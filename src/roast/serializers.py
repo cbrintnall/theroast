@@ -16,23 +16,25 @@ class RoastImageSerializer(serializers.ModelSerializer):
         fields = ('content', 'unique_id')
 
 class RoastSerializer(serializers.ModelSerializer):
-    images = serializers.ListField(child=RoastImageSerializer())
+    images = RoastImageSerializer(many=True)
     ready = serializers.BooleanField(read_only=True)
 
     def create(self, data):
-        images = data.pop('images')
+        images, instances = data.pop('images'), []
         serializer = RoastImageSerializer()
-        instances = []
 
         for image in images:
-            instances.append(serializer.create(image))
+            image = serializer.create(image)
+            image.save()
+            instances.append(image)
 
         roast = Roast(**data)
-        roast.images = instances
+        roast.save()
+
+        roast.images.add(*instances)
         roast.save()
 
         return roast
-
 
     class Meta:
         model = Roast
