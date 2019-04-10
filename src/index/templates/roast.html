@@ -25,14 +25,23 @@ Vue.component('roast-page', {
     `
 })
 
+var KEY = "{{unique_id}}"
 var app = new Vue({
     el: "#roast-app",
     data: {
-        // PK will be replaced by Django's templating engine.
-        key: parseInt("{{ pk }}"),
         roast: {}
     },
-    mounted() { }
+    mounted() { 
+        axios.get({
+            url: `/roast/${this.key}`
+        })
+            .then((response) => {
+                console.log(response)
+        })
+            .catch((error) => {
+                console.log(error)
+        })
+    }
 })
 </script>
 {% endblock %}

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from roast.models import Roast, RoastImage
-from roast.utils.gcs_utils import upload_b64
+from roast.utils.gcs_utils import upload_b64, get_id_from_path
 
 class RoastImageSerializer(serializers.ModelSerializer):
     content = serializers.CharField(write_only=True)
@@ -9,7 +9,8 @@ class RoastImageSerializer(serializers.ModelSerializer):
     def create(self, data):
         content = data.get('content')
         path = upload_b64(content)
-        return RoastImage.objects.create(path=path)
+        image_id = get_id_from_path(path)
+        return RoastImage.objects.create(unique_id=image_id, path=path)
 
     class Meta:
         model = RoastImage

@@ -7,12 +7,10 @@ from roast.views import *
 roast_router = DefaultRouter()
 roast_router.register(r'', Roasts)
 
-# urlpatterns = [
-#     # path('id/<int:pk>', TemplateView.as_view(template_name='roast.html'),
-#     path('id/<int:pk>', roast_detail, name='roast_detail'),
-#     path('', roasts, name="roasts"),
-# ]
+roast_image_router = DefaultRouter()
+roast_image_router.register(r'', RoastImages)
 
 urlpatterns = [
-    path('', include(roast_router.urls))
+    path('', include(roast_router.urls)),
+    path('images/', include(roast_image_router.urls))
 ]

@@ -10,7 +10,6 @@ class RoastImage(models.Model):
     unique_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     path = models.CharField(max_length=200)
     position = models.IntegerField(default=0)
-    # owner = models.ForeignKey(Roast, null=True, on_delete=models.CASCADE)
 
 class Roast(models.Model):
     long_description = models.CharField(max_length=800)
