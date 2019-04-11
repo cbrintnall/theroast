@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -22,5 +23,8 @@ class RoastImages(viewsets.ModelViewSet):
 
     def retrieve(self, request, unique_id=None):
         import base64
+        from io import BytesIO
         image = get_image(unique_id)
-        return Response({"image": base64.b64encode(image.download_as_string())})
+        file_bytes = BytesIO()
+        image.download_to_file(file_bytes)
+        return HttpResponse(file_bytes.getvalue(), content_type="image/jpeg")
