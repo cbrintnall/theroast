@@ -10,6 +10,10 @@ from rest_framework.response import Response
 from roast.utils.gcs_utils import get_image
 from roast.models import Roast, RoastImage
 from roast.serializers import RoastSerializer, RoastImageSerializer
+from io import BytesIO
+
+import base64
+
 
 class Roasts(viewsets.ModelViewSet):
     queryset = Roast.objects.all()
@@ -22,8 +26,6 @@ class RoastImages(viewsets.ModelViewSet):
     lookup_value_regex = '([0-9a-f\-]{36}|[0-9a-f]{32})'
 
     def retrieve(self, request, unique_id=None):
-        import base64
-        from io import BytesIO
         image = get_image(unique_id)
         file_bytes = BytesIO()
         image.download_to_file(file_bytes)
