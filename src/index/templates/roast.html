@@ -2,24 +2,44 @@
 {% load static %}
 
 {% block content %}
-{% endblock %}
-
-{% block rightcol %}
-<div id="roast-app">
+<div id="roast-app" style="margin-top: 12px;">
     <roast-page>
     </roast-page>
 </div>
 {% endblock %}
 
+{% block rightcol %}
+{% endblock %}
+
 {% block post_body_static %}
 <script>
 Vue.component('roast-page', {
-    props: ["roast"],
+    delimiters: ["[[", "]]"],
+    data() {
+        return {
+            roast: {},
+            key: "{{unique_id}}"
+        }
+    },
+    mounted() { 
+        var url = `/roast/${this.key}/`
+        axios.get(url)
+            .then((response) => {
+                this.roast = response.data;
+                console.log(this.roast.images)
+        })
+            .catch((error) => {
+                
+        })
+    },
     template: `
     <div style="text-align: center; width: 100%; height: 100%;">
-        <h2></h2>
+        <h2>[[ roast.name ]]</h2>
         <hr />
-        <roast-image src="">
+        <roast-image 
+            v-for="image in roast.images"
+            src="image"
+        >
         </roast-image>
     </div>
     `
@@ -27,20 +47,6 @@ Vue.component('roast-page', {
 
 var app = new Vue({
     el: "#roast-app",
-    data: {
-        roast: {},
-        key: "{{unique_id}}"
-    },
-    mounted() { 
-        var url = `/roast/${this.key}/`
-        axios.get(url)
-            .then((response) => {
-                console.log(response)
-        })
-            .catch((error) => {
-                console.log(error)
-        })
-    }
 })
 </script>
 {% endblock %}
