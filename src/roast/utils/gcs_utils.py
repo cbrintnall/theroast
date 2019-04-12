@@ -12,10 +12,10 @@ CLIENT = DRIVER.client
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.INFO)
 
-def upload_b64(base):
+def upload_b64(base, unique_id):
     base64_bytes = base64.b64decode(base)
     container = get_bucket()
-    path = generate_new_path()
+    path = generate_path(unique_id)
     blob = container.blob(path)
     
     blob.upload_from_string(base64_bytes)

@@ -2,14 +2,17 @@ from rest_framework import serializers
 from roast.models import Roast, RoastImage
 from roast.utils.gcs_utils import upload_b64
 
+import uuid
+
 class RoastImageSerializer(serializers.ModelSerializer):
     content = serializers.CharField(write_only=True)
     unique_id = serializers.CharField(read_only=True)
 
     def create(self, data):
         content = data.get('content')
-        path = upload_b64(content)
-        return RoastImage.objects.create(path=path)
+        unique_id = uuid.uuid4()
+        path = upload_b64(content, unique_id)
+        return RoastImage.objects.create(unique_id=unique_id, path=path)
 
     class Meta:
         model = RoastImage

@@ -4,6 +4,7 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 from rest_framework import viewsets
+from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -27,6 +28,10 @@ class RoastImages(viewsets.ModelViewSet):
 
     def retrieve(self, request, unique_id=None):
         image = get_image(unique_id)
+
+        if image is None:
+            return Response(status=HTTP_404_NOT_FOUND)
+
         file_bytes = BytesIO()
         image.download_to_file(file_bytes)
         return HttpResponse(file_bytes.getvalue(), content_type="image/jpeg")

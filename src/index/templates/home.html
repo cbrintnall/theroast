@@ -4,7 +4,7 @@
     ☕ Upload a new roast ☕
   </h2>
   <hr style="margin-top: 24px" />
-  <roast-form method="POST" action="{% url 'roast:api-root' %}">
+  <roast-form method="POST" action="{% url 'roast:roast-list' %}">
     {% csrf_token %}
     <div class="form-group row">
       <div class="col">
@@ -40,7 +40,10 @@
     </button>
   </roast-form>
 </div>
-{% endblock %} {% block rightcol %} {% endblock %} {% block post_body_static %}
+{% endblock %} 
+{% block rightcol %} 
+{% endblock %}
+{% block post_body_static %}
 <script src="{% static 'home/home.js' %}"></script>
 <style>
   label {
