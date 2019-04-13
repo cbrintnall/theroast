@@ -29,10 +29,13 @@ Vue.component('color-range', {
 })
 
 Vue.component('roast-image', {
-    props: ["src"],
+    props: ["image-src", "height", "width"],
     template: `
     <div>
-        <img :src="src">
+        <img 
+            v-bind:src="imageSrc"
+            v-bind:style="{ height: height + 'px', width: width + 'px' }"
+        >
     </div>
     `
 })
