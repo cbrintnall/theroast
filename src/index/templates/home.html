@@ -4,7 +4,13 @@
     ☕ Upload a new roast ☕
   </h2>
   <hr style="margin-top: 24px" />
-  <roast-form method="POST" action="{% url 'roast:roast-list' %}">
+  <roast-form 
+    method="POST" 
+    action="{% url 'roast:roast-list' %}"
+    @submit="submitted"
+    @done="done"
+    @error="error"
+  >
     {% csrf_token %}
     <div class="form-group row">
       <div class="col">
@@ -35,10 +41,39 @@
         ></roast-image-upload>
       </div>
     </div>
-    <button type="submit" class="btn btn-dark btn-block shadow-lg mb-5 pill">
-      Submit
+    <button 
+        type="submit" 
+        class="btn btn-dark btn-block shadow-lg mb-5 pill"
+    >
+      <span v-if="!loading">[[ submitText ]]</span>
+      <div v-if="loading">
+        <span 
+          class="spinner-border spinner-border-sm" 
+          role="status" 
+          aria-hidden="true"
+        ></span>
+          Loading..
+      </div>
     </button>
   </roast-form>
+    <ul class="list-group">
+      <li 
+        class="list-group-item list-group-item-danger"
+        style="text-align: center; margin-bottom: 4px;"
+        v-if="errors"
+        v-for="error in Object.keys(errors)"
+      >
+      {% comment %} 
+        TODO: Fix this later
+        
+        It needs a better way to format the error name,
+        and to show the errors. Instead of rendering the raw
+        object. 
+      {% endcomment %}
+      <strong>[[ error[0].toUpperCase() + error.substring(1, error.length) ]]:</strong>
+      <span> [[ errors[error] ]] </span>
+      </li>
+    </ul>
 </div>
 {% endblock %} 
 {% block rightcol %} 

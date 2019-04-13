@@ -19,19 +19,18 @@ Vue.component('roast-form', {
       })
 
       payload = Object.assign({}, ...objects);
-      
-      console.log(payload)
+      this.$emit('submit')
 
       axios({
         method: this.method,
         url: this.action,
         data: payload
       })
-        .then((data) => {
-          console.log(data)
+        .then((response) => {
+          this.$emit('done', response)
       })
         .catch((error) => {
-          console.error(error)
+          this.$emit('error', error)
       })
     },
     /* Takes in an input, transforms it into JSON */
@@ -52,6 +51,7 @@ Vue.component('roast-form', {
       try {
         value = JSON.parse(value);
       } catch {
+
       }
 
       payload[key] = value;

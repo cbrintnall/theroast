@@ -22,6 +22,32 @@ Vue.component('color-range', {
     `
 })
 
+var EXISTS_REGEX = /(\w+)\ already exists/
 var app = new Vue({
-    el: '#home-app'
+    el: '#home-app',
+    delimiters: ["[[", "]]"],
+    methods: {
+        submitted() {
+            this.loading = true;
+        },
+        done(response) {
+            console.log(response)
+            this.loading = false;
+            this.submitText = "Done 😊"
+            document.location.href = "/r/" + response.data.name
+        },
+        error(err) {
+            if (err.response.status >= 300) {
+                this.errors = err.response.data
+            }
+
+            this.loading = false;
+            this.submitText = "Error 😞"
+        }
+    },
+    data: {
+        loading: false,
+        submitText: "Submit",
+        errors: {}
+    }
 })

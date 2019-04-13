@@ -18,18 +18,32 @@ Vue.component('roast-page', {
     data() {
         return {
             roast: {},
+            images: [],
             key: "{{unique_id}}"
         }
     },
     mounted() { 
         var url = `/roast/${this.key}/`
         axios.get(url)
-            .then((response) => {
+            .then(response => {
                 this.roast = response.data;
-                console.log(this.roast.images)
+                var images = this.roast.images;
+                images.forEach(image => {
+                    var imageUrl = "/roast/images/" + image.unique_id + "/"
+                    axios.get(imageUrl)
+                        .then(response => {
+                            console.log(response)
+                    })
+                        .catch(response => {
+
+                    })
+                })
         })
-            .catch((error) => {
-                
+            .catch(err => {
+                console.log(err)
+                if (err.response.code == 404) {
+                    document.location.href = "/"
+                }
         })
     },
     template: `

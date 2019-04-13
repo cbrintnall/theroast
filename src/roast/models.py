@@ -12,9 +12,9 @@ class RoastImage(models.Model):
     position = models.IntegerField(default=0)
 
 class Roast(models.Model):
+    name = models.CharField(max_length=100, primary_key=True)
     long_description = models.CharField(max_length=800)
     short_description = models.CharField(max_length=120)
-    name = models.CharField(max_length=120)
 
     # Scale of 1-100 of how dark / light the roast is
     color = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
